@@ -102,10 +102,9 @@ class PdfToEntries(TextToEntries):
             # The handle must be closed before the loader opens the path: on
             # Windows, a delete=True tempfile cannot be reopened while the
             # writer handle is open (PermissionError / WinError 32).
-            tmpf = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
-            tmpf.write(pdf_file)
-            tmpf.flush()  # Ensure all data is written
-            tmpf.close()
+            with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmpf:
+                tmpf.write(pdf_file)
+                tmpf.flush()  # Ensure all data is written
 
             # Load the content using PyMuPDFLoader
             loader = PyMuPDFLoader(tmpf.name)
